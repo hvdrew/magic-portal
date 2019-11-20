@@ -1,3 +1,17 @@
+/**
+ * File that handles the sending logic.
+ * 
+ * You must provide a secret pass-phrase as the one and only argument
+ * when calling this file directly from a shell. This key will
+ * broadcast on the local network, hopefully matching a listening client.
+ * 
+ * In this file we get the first available network interface from the OS, 
+ * then using that we determine the broadcast address for the network.
+ * 
+ * A socket is created from that point, which enables broadcast mode on the SO,
+ * then sends a message with the previously mentioned key.
+ */
+
 let key;
 if (process.argv.length != 3) {
     console.log('Invalid input.');

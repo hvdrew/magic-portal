@@ -1,3 +1,14 @@
+/**
+ * File that handles the receiving logic.
+ * 
+ * Running this directly will generate a key, start a socket listener,
+ * and wait for a broadcast message containing a matching key.
+ * 
+ * Once this is complete the responding machine will send it's local IP
+ * and port, so we can start a more appropriate server and begin the 
+ * transfer process at that point.
+ */
+
 const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
 
