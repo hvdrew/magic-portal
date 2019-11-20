@@ -11,8 +11,7 @@ Currently only the initial handshake is functional.
 
 ### Setup
 
-Install:
-`npm install` or `yarn`
+No external dependencies are required. Simply clone and run!
 
 Running Client:
 `node client.js`
