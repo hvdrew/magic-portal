@@ -1,4 +1,4 @@
-## Node File Transfer Tool
+## Magic Portal File Transfer Tool
 
 This tool provides a CLI interface much like magic-wormhole, but it focuses on file transfers within a local network.
 
