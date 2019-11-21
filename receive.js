@@ -12,13 +12,7 @@
  * then sends a message with the previously mentioned key.
  */
 
-let key;
-if (process.argv.length != 3) {
-    console.log('Invalid input.');
-    process.exit(1);
-} else {
-    key = process.argv[2];
-}
+const key = process.argv[2];
 
 const findBroadcastAddress = require('./lib/broadcastAddress');
 const os = require('os');

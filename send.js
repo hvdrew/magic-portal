@@ -13,7 +13,14 @@ const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
 
 const myKey = require('./lib/key')();
-console.log(myKey);
+
+console.log(
+`Please have the receiving user enter the following command on their machine:
+
+    magic-portal receive ${myKey}
+
+Listening for their connection...`
+);
 
 server.on('error', (err) => {
     console.log(`server error:\n${err.stack}`);
@@ -27,7 +34,7 @@ server.on('message', (msg, rinfo) => {
 
 server.on('listening', () => {
     const address = server.address();
-    console.log(`server listening ${address.address}:${address.port}`);
+    // console.log(`server listening ${address.address}:${address.port}`);
 });
   
 server.bind(41234);
