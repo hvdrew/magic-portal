@@ -12,7 +12,7 @@
  * then sends a message with the previously mentioned key.
  */
 
-const key = process.argv[2];
+const key = process.argv[3];
 
 const findBroadcastAddress = require('./lib/broadcastAddress');
 const os = require('os');
