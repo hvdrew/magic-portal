@@ -12,26 +12,24 @@
  * then sends a message with the previously mentioned key.
  */
 
-let key;
-if (process.argv.length != 3) {
-    console.log('Invalid input.');
-    process.exit(1);
-} else {
-    key = process.argv[2];
-}
-
 const findBroadcastAddress = require('./lib/broadcastAddress');
 const os = require('os');
 const dgram = require('dgram');
 
-const broadcastAddr = findBroadcastAddress(Object.keys(os.networkInterfaces())[0])
+function receiveHandler(cliInstance) {
+    const key = cliInstance.key;
+    const broadcastAddr = findBroadcastAddress(Object.keys(os.networkInterfaces())[0]);
+    const client = dgram.createSocket('udp4');
+    
+    client.bind(8000, undefined, () => {
+        client.setBroadcast(true);
+    });
+    
+    client.send(key, 41234, broadcastAddr, (err) => {
+        // TODO: We want to start a server once this is completed since the sending client will have our IP from here on.
+        // Need to spin up a web server, set some handlers for file transfer.
+        client.close();
+    });
+}
 
-const client = dgram.createSocket('udp4');
-
-client.bind(8000, undefined, () => {
-    client.setBroadcast(true);
-});
-
-client.send(key, 41234, broadcastAddr, (err) => {
-    client.close();
-});
+module.exports = receiveHandler;
