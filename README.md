@@ -13,8 +13,8 @@ Currently only the initial handshake is functional.
 
 No external dependencies are required. Simply clone and run!
 
-Running Client:
-`node client.js`
+Sending Files:
+`node index.js send ./some-file-path.js`
 
-Running Server:
-`node server.js SHARED-PASS-PHRASE`
+Receiving Files:
+`node index.js receive SHARED-PASS-PHRASE`
