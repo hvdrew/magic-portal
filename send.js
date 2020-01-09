@@ -10,31 +10,35 @@
  */
 
 const dgram = require('dgram');
-const server = dgram.createSocket('udp4');
 
-const myKey = require('./lib/key')();
+function sendHandler(cliInstance) {
+    // Set the key for the transfer
+    cliInstance.key = require('./lib/key')();
+    
+    // Spin up a dgram server
+    const server = dgram.createSocket('udp4');
 
-console.log(
-`Please have the receiving user enter the following command on their machine:
+    server.on('error', (err) => {
+        console.log(`server error:\n${err.stack}`);
+        server.close();
+    });
+      
+    server.on('message', (msg, rinfo) => {
+        if (msg == cliInstance.key) console.log(`Server got correct key!`);
+        console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+        
+        // TODO: If the key matches, we need to start trying to connect to the address we now have
+        // On a predetermined port. This should be broken out into it's own separate method.
+    });
+    
+    server.on('listening', () => {
+        const address = server.address();
+        console.log(`server listening ${address.address}:${address.port}`);
+    });
+      
+    server.bind(41234);
+    
+    cliInstance.sendCommandMessage();
+}
 
-    magic-portal receive ${myKey}
-
-Listening for their connection...`
-);
-
-server.on('error', (err) => {
-    console.log(`server error:\n${err.stack}`);
-    server.close();
-  });
-  
-server.on('message', (msg, rinfo) => {
-    if (msg == myKey) console.log(`Server got correct key!`);
-    console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-});
-
-server.on('listening', () => {
-    const address = server.address();
-    // console.log(`server listening ${address.address}:${address.port}`);
-});
-  
-server.bind(41234);
+module.exports = sendHandler;
