@@ -21,10 +21,10 @@ function receiveHandler(cliInstance) {
     const broadcastAddresses = getBroadcastAddresses();
     const client = dgram.createSocket('udp4');
     
-    client.bind(8000, undefined, () => {
+    client.bind(8000, '255.255.255.255', () => {
         client.setBroadcast(true);
     });
-    
+
     broadcastAddresses.forEach(addr => {
         client.send(key, 41234, addr, (err) => {
             // TODO: We want to start a server once this is completed since the sending client will have our IP from here on.
