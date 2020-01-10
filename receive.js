@@ -15,42 +15,42 @@
 const getBroadcastAddresses = require('./lib/broadcastAddress');
 const dgram = require('dgram');
 const http = require('http');
+const fs = require('fs');
 
 function receiveHandler(cliInstance) {
     const key = cliInstance.key;
     const broadcastAddresses = getBroadcastAddresses();
     const client = dgram.createSocket('udp4');
+    let sentHandshake = false;
     
     client.bind(8000, undefined, () => {
         client.setBroadcast(true);
     });
     
     client.on('message', (msg, rinfo) => {
-        if (msg.toString() == 'Paired') {
-            console.log('Pairing complete, requesting file');
-            http.get(`http://${rinfo.address}:3000`, (response) => {
-                let data = '';
-                
+        if (msg.toString() == 'Paired' && sentHandshake) {
+            let outputFile;
+            outputFile = fs.createWriteStream(cliInstance.outputFileName);
+            
+            console.log('Pairing complete, requesting file....\n\n');
+            http.get(`http://${rinfo.address}:3000`, (response) => {                
                 response.on('data', (chunk) => {
-                    data += chunk;
+                    outputFile.write(chunk);
+                    process.stdout.write('=');
                 });
                 
                 response.on('end', () => {
-                    console.log(data);
+                    console.log(`\nAll done! Saved file to ${cliInstance.outputFileName}`);
                 });
             }).on('error', error => console.error(error));
             
         }
-    })
-
-    //broadcastAddresses.forEach(addr => {
-        client.send(key, 41234, broadcastAddresses[0], (err) => {
-            // TODO: We want to start a server once this is completed since the sending client will have our IP from here on.
-            // Need to spin up a web server, set some handlers for file transfer.
-            // client.close();
-            console.log('sent key to ', broadcastAddresses[0])
-        });
-    //})
+    });
+    
+    client.send(key, 41234, broadcastAddresses[0], (err) => {
+        console.log('sent key to ', broadcastAddresses[0])
+        sentHandshake = true;
+    });
 }
 
 module.exports = receiveHandler;

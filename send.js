@@ -15,9 +15,18 @@ const httpServer = require('http').createServer();
 
 function fileTransferServerHandler(file) {
     httpServer.on('request', (req, res) => {
-        console.log('received request!')
+        console.log('Received request! transferring file...');
+        
+        // Need to encrypt then compress before piping to request
         const sourceFile = fs.createReadStream(file);
         sourceFile.pipe(res);
+        
+        console.log('File transfer complete.');
+        httpServer.close();
+    });
+    
+    httpServer.on('close', () => {
+        process.exit(0);
     });
     
     httpServer.listen(3000, () => console.log('Listening on 3000 for partner machine to connect.'));
