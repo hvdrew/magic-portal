@@ -22,6 +22,7 @@ function receiveHandler(cliInstance) {
     const broadcastAddresses = getBroadcastAddresses();
     const client = dgram.createSocket('udp4');
     let sentHandshake = false;
+    let paired = false;
     
     client.bind(8000, undefined, () => {
         client.setBroadcast(true);
@@ -30,6 +31,7 @@ function receiveHandler(cliInstance) {
     client.on('message', (msg, rinfo) => {
         if (msg.toString() == 'Paired' && sentHandshake) {
             let outputFile;
+            paired = true;
             outputFile = fs.createWriteStream(cliInstance.outputFileName);
             
             console.log('Pairing complete, requesting file....\n\n');
@@ -41,16 +43,22 @@ function receiveHandler(cliInstance) {
                 
                 response.on('end', () => {
                     console.log(`\nAll done! Saved file to ${cliInstance.outputFileName}`);
+                    process.exit(0);
                 });
             }).on('error', error => console.error(error));
             
         }
     });
     
-    client.send(key, 41234, broadcastAddresses[0], (err) => {
-        console.log('sent key to ', broadcastAddresses[0])
-        sentHandshake = true;
+    broadcastAddresses.forEach(addr => {
+        if (!paired) {
+            client.send(key, 41234, addr, (err) => {
+                console.log('sent key to ', addr)
+                sentHandshake = true;
+            });    
+        }
     });
+        
 }
 
 module.exports = receiveHandler;
