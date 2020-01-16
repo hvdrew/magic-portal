@@ -10,6 +10,27 @@
  */
 
 const dgram = require('dgram');
+const fs = require('fs');
+const httpServer = require('http').createServer();
+
+function fileTransferServerHandler(file) {
+    httpServer.on('request', (req, res) => {
+        console.log('Received request! transferring file...');
+        
+        // Need to encrypt then compress before piping to request
+        const sourceFile = fs.createReadStream(file);
+        sourceFile.pipe(res);
+        
+        console.log('File transfer complete.');
+        httpServer.close();
+    });
+    
+    httpServer.on('close', () => {
+        process.exit(0);
+    });
+    
+    httpServer.listen(3000, () => console.log('Listening on 3000 for partner machine to connect.'));
+}
 
 function sendHandler(cliInstance) {
     // Set the key for the transfer
@@ -26,9 +47,14 @@ function sendHandler(cliInstance) {
     server.on('message', (msg, rinfo) => {
         if (msg == cliInstance.key) console.log(`Server got correct key!`);
         console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-        
         // TODO: If the key matches, we need to start trying to connect to the address we now have
         // On a predetermined port. This should be broken out into it's own separate method.
+        
+        server.send('Paired', rinfo.port, rinfo.address, (err) => {
+            console.log('Paired with ' + rinfo.address);
+            server.close();
+        });
+        fileTransferServerHandler(cliInstance.file);
     });
     
     server.on('listening', () => {

@@ -1,0 +1,31 @@
+{
+  "name": "magic-portal-cli",
+  "version": "1.0.1",
+  "description": "This tool provides a CLI interface much like magic-wormhole, but it focuses on file transfers within a local network.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "node . send cat.txt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hvdrew/magic-portal.git"
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">=8"
+  },
+  "author": "Andrew Merison",
+  "license": "MIT",
+  "preferGlobal": true,
+  "bin": {
+    "magic-portal": "bin/magic-portal"
+  },
+  "bugs": {
+    "url": "https://github.com/hvdrew/magic-portal/issues"
+  },
+  "homepage": "https://github.com/hvdrew/magic-portal#readme"
+}

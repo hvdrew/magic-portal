@@ -6,15 +6,15 @@ It allows for a receiving client to run a command and generate a secret phrase, 
 
 All transfers will be encrypted and compressed for best results.
 
-Currently only the initial handshake is functional.
+Currently file transfers are not compressed or encrypted.
 
 
 ### Setup
 
-No external dependencies are required. Simply clone and run!
+No external dependencies are required. Simply run `npm i -g magic-portal-cli`!
 
 Sending Files:
-`node index.js send ./some-file-path.js`
+`magic-portal send ./some-file-path.js`
 
 Receiving Files:
-`node index.js receive SHARED-PASS-PHRASE`
+`magic-portal receive SHARED-PASS-PHRASE output-file-name.js`
