@@ -11,10 +11,11 @@ Currently file transfers are not compressed or encrypted.
 
 ### Setup
 
-No external dependencies are required. Simply run `npm i -g magic-portal-cli`!
+No external dependencies are required. Simply run 
+`npm i -g magic-portal-cli`!
 
-Sending Files:
+Sending Files:  
 `magic-portal send ./some-file-path.js`
 
-Receiving Files:
+Receiving Files:  
 `magic-portal receive SHARED-PASS-PHRASE output-file-name.js`
